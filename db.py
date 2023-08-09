@@ -5,7 +5,7 @@ class Database():
     def __init__(self, database_name):
         print("\nConnecting to the PostgreSQL\n")
         self.connection = psycopg2.connect(host="db",
-                                           database='test',
+                                           database=f'{database_name}',
                                            user="postgres",
                                            password="new_password",
                                            port="5432")
@@ -55,8 +55,4 @@ class Database():
             f'SELECT DISTINCT {column} FROM {table};')
         return self.cursor.fetchall()
 
-    def dupa(self, table, column):
-        print(f"SELECT MAX({column})+1 FROM {table}")
-        self.cursor.execute(
-            f"ALTER TABLE {table} ALTER COLUMN {column} SET NOT NULL")
-        self.connection.commit()
+

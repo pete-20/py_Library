@@ -59,7 +59,11 @@ def func_update(table, key: str, value, id):
 def func_category_distinct(table):
     db = Database('test')
     dis_cat = db.category_distinct(table, 'category')
-    print(dis_cat)
-    for a in dis_cat:
-        print(a[0])
     return dis_cat
+
+
+# 10
+def func_book_id(table, id):
+    db = Database('test')
+    book_info = db.fetch_id(table, id)
+    return book_info

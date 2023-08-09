@@ -5,16 +5,35 @@ import psycopg2.errors as db_err
 app = Flask(__name__)
 
 
-@app.route("/API/")
+# 1
+@app.route("/API")
 def hello_world():
-    return "<p>Hello, Welcome to Pete's library</p>"
+    info = ("<h1>Hello, Welcome to Pete's library</h1>"
+            "<p>############################   API's interface - available endpoints:   ############################</p>"
+            "<p>http://localhost:5000/API/ ---> landging page <p>"
+            "<p>http://localhost:5000/API/categories ---> available categories</p>"
+            "<p>http://localhost:5000/API/books ---> available books</p>"
+            "<p>DELETE http://localhost:5000/API/books/<id> ---> deleting an object with <id></p>"
+            "<p>PUT http://localhost:5000/API/books/<id> ---> updating an object with <id></p>"
+            "<p>GET http://localhost:5000/API/books/<id> --> getting information about an object with <id></p>"
+            "<p>http://localhost:5000/API/<category> --> all available books from <category></p>"
+            "<p>http://localhost:5000/API/add --> adding a new book</p>"
+            "<p>{</p>"
+            "<p>'category': str,</p>"
+            "<p>'book': str,</p>"
+            "<p>'author': str,</p>"
+            "<p>'pages': int,</p>"
+            "<p>'status': str</p>"
+            "<p>}</p>"
+            )
+    return info
 
 
+# 2
 @app.route('/API/categories')
 def categories():
     books = cms.func_category_distinct('library')
-    return jsonify({'books': [book[0] for book in books]}), 200
-
+    return jsonify({'categories': [book[0] for book in books]}), 200
 
 
 @app.route('/API/books')
@@ -32,8 +51,8 @@ def book_id(id):
     try:
         if request.method == 'GET':
             try:
-                books3 = cms.func_fetchall('library')
-                return jsonify({'All books': [book[1] for book in books3]})
+                books3 = cms.func_book_id('library', id)
+                return jsonify({f'Book ID: {id}': [book for book in books3]})
             except:
                 return f"Can't show book ID - {id}"
         elif request.method == 'DELETE':
@@ -55,15 +74,11 @@ def book_id(id):
         return print("Can't connect")
 
 
-@app.route('/API/IT/')
-def cat_IT():
-    ITc = cms.func_category('library', 'IT')
-    return jsonify({'IT': ITc})
-
-
-@app.route("/API/categories/<name>")
-def category(name: str):
-    return f"Wszystkie książki z kategori: {name}"
+@app.route('/API/<category>')
+def cat_IT(category):
+    categ = cms.func_category('library', category)
+    return jsonify(
+        {f"All books from category {category}": [cat1[2] for cat1 in categ]})
 
 
 @app.route('/API/add', methods=['POST'])
@@ -76,7 +91,7 @@ def add():
         pages = req['pages']
         status = req['status']
         cms.func_add('library', category, book, author, pages, status)
-        return 'Tutaj zaraz będzie dodawanie'
+        return f"{book} succesfully added to the databse!"
     except db_err.UniqueViolation:
         return f"Value {book} duplicated. Can't save the same book second time"
 

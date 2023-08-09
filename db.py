@@ -77,3 +77,8 @@ class Database():
     def category_distinct(self, table, coulmn_name):
         self.cursor.execute(f"SELECT DISTINCT {coulmn_name} FROM {table}")
         return self.cursor.fetchall()
+
+    # 12
+    def fetch_id(self, table, id):
+        self.cursor.execute(f'SELECT * FROM {table} WHERE id={id};')
+        return self.cursor.fetchall()

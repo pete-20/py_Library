@@ -1,86 +1,85 @@
 from flask import Flask, jsonify, request
-from commands import func_fetchall, func_add, func_category, create_table
-import requests
+import commands as cms
+import psycopg2.errors as db_err
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/API/")
 def hello_world():
-    return "<p>Hello, Welcome to library</p>"
+    return "<p>Hello, Welcome to Pete's library</p>"
 
 
-@app.route('/categories')
-def cat():
-    books = func_fetchall('library')
-    return jsonify({'categories': [book[1] for book in books]})
+@app.route('/API/categories')
+def categories():
+    books = cms.func_category_distinct('library')
+    return jsonify({'books': [book[0] for book in books]}), 200
 
 
-@app.route('/books')
+
+@app.route('/API/books')
 def books():
     try:
-        cat = func_fetchall('library')
-        return jsonify({'books': [book[2] for book in cat]})
+        cat = cms.func_fetchall('library')
+        return jsonify({'books': [book[2] for book in cat]}), 200
     except:
-        print("Can't establish a connection to the database. Please check db's configuration")
+        print("Can't establish a connection to the database.\n")
+        print("Please check db's configuration.")
 
 
-@app.route('/IT/')
+@app.route('/API/books/<id>', methods=['DELETE', 'GET', 'PUT'])
+def book_id(id):
+    try:
+        if request.method == 'GET':
+            try:
+                books3 = cms.func_fetchall('library')
+                return jsonify({'All books': [book[1] for book in books3]})
+            except:
+                return f"Can't show book ID - {id}"
+        elif request.method == 'DELETE':
+            try:
+                cms.func_delete('library', id)
+                return f"Deleted id: {id}"
+            except:
+                return f"Can't delete ID: {id}"
+        elif request.method == 'PUT':
+            try:
+                req = request.get_json()
+                key_to_update = [req_key for req_key in req.keys()][0]
+                value_to_update = [req_value for req_value in req.values()][0]
+                cms.func_update('library', key_to_update, value_to_update, id)
+                return jsonify(f"Message: Book - ID:{id} succesfully updated")
+            except:
+                return f"Can't update Book - ID: {id}"
+    except:
+        return print("Can't connect")
+
+
+@app.route('/API/IT/')
 def cat_IT():
-    ITc = func_category('library')
+    ITc = cms.func_category('library', 'IT')
     return jsonify({'IT': ITc})
 
 
-@app.route("/categories/<name>")
+@app.route("/API/categories/<name>")
 def category(name: str):
     return f"Wszystkie książki z kategori: {name}"
 
-#
 
-
-@app.route('/add/', methods=['POST'])
+@app.route('/API/add', methods=['POST'])
 def add():
-    req = request.get_json()
-    category = req['category']
-    book = req['book']
-    author = req['author']
-    pages = req['pages']
-    status = req['status']
-    func_add('library', category, book, author, pages, status)
-    return 'Tutaj zaraz będzie dodawanie'
-
-####################################################################################################
-
-
-@app.route('/user/<username>')
-def profile(username):
-    return f'{username}\'s profile'
-
-####################################################################################################
-
-
-#create_table('Library')
-
-'''
-payload = {
-    "category": "IT",
-    "book": "Linux wprowadzenie do języka poleceń",
-    "author": "Kent Beck",
-    "pages": 500,
-    "status": "to read"
-}
-
-#r = requests.put('https://httpbin.org/post', data=payload)
-r = requests.put('http://localhost:5000/add/', params=payload)
-
-print(r.text)
-'''
+    try:
+        req = request.get_json()
+        category = req['category']
+        book = req['book']
+        author = req['author']
+        pages = req['pages']
+        status = req['status']
+        cms.func_add('library', category, book, author, pages, status)
+        return 'Tutaj zaraz będzie dodawanie'
+    except db_err.UniqueViolation:
+        return f"Value {book} duplicated. Can't save the same book second time"
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
-
-# DODAWANIE KOLUMNY DO TABELI PO JEJ UTWORZENIU
-
-# ALTER TABLE table_name ADD COLUMN column_name TIMESTAMP;

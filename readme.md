@@ -1,29 +1,52 @@
-# HOST:
+# Project's guidelines:
+Library's project based on Flask to create a simple REST API with multiple endpoints.
 
-## http://localhost:5000/API/
+<ul>
+<li>Used database : PostgreSQL</li>
 
-# ENDPOINTS:
+<li>3 containers run on Docker:</li> 
+<ol>
+<li>db - PostgreSQL database - port: 5432</li>
+<li>adminer - reading data from database - port: 5000</li>
+<li>web - Server with API - port: 8080 </li>
+</ol>
+</ul>
 
-### 1) All books:
+## HOST:
+
+### http://localhost:5000/API/
+
+## ENDPOINTS:
+
+### 1) Landging page:
+    http://localhost:5000/API/
+
+### 2) Available categories:
+    http://localhost:5000/API/categories
+
+### 3) Available books:
     http://localhost:5000/API/books
 
-### 2) List of all authors:
-    http://localhost:5000/API/authors
-
-### 3) Genres list:
-    http://localhost:5000/API/genres
+### 4) Deleting an object with id:
+    DELETE http://localhost:5000/API/books/<id>
     
+### 5) Updating an object with id:
+    PUT http://localhost:5000/API/books/<id>
 
-## TD:
-###       add a function allowing to add a table into db
-###       add a function to modify data in a row
-### create an api to show: /books /category /authors
-###       create an end point to save a new entry into database
-###       change database to Postgresql
-###       install Docker&DockerComposer
-###       use git to put everything into a new branch
-### 
-###
+### 6) Getting information about an object with id:
+    GET http://localhost:5000/API/books/<id>
 
+### 7) All available books from category:
+    http://localhost:5000/API/<category>
 
-# Project guidelines:
+### 8) Adding a new book:
+    http://localhost:5000/API/add  
+
+#### + request json e.g.:
+{   
+    "category":"IT",
+    "book":"Test Driven Development22",
+    "author":"Kent Beck",
+    "pages": 1000,
+    "status": "to buy"
+}

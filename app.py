@@ -17,7 +17,7 @@ def hello_world():
             "<p>PUT http://localhost:5000/API/books/<id> ---> updating an object with <id></p>"
             "<p>GET http://localhost:5000/API/books/<id> --> getting information about an object with <id></p>"
             "<p>http://localhost:5000/API/<category> --> all available books from <category></p>"
-            "<p>http://localhost:5000/API/add --> adding a new book</p>"
+            "<p>POST http://localhost:5000/API/add --> adding a new book</p>"
             "<p>{</p>"
             "<p>'category': str,</p>"
             "<p>'book': str,</p>"

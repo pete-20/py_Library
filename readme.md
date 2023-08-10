@@ -45,7 +45,7 @@ Library's project based on Flask to create a simple REST API with multiple endpo
 #### + request json e.g.:
 {   
     "category":"IT",
-    "book":"Test Driven Development22",
+    "book":"Test Driven Development",
     "author":"Kent Beck",
     "pages": 1000,
     "status": "to buy"

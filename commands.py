@@ -1,62 +1,69 @@
 from db import Database
 
 
-# def func_setup():
-#    db = Database('test')
-
-
+# 1
 def func_fetchall(table_name: str):
     db = Database('test')
     links = db.fetch_all(table_name)
-    print('ABC')
-    print(links)
-    print('ABC')
-    for link in links:
-        print(link)
     return links
 
 
-"""
-def func_distinct(table_name: str, column: str):
-    db = Database('test')
-    links2 = db.fetch_cat(table_name, column)
-    print('hahahaha')
-    print(links2)
-    print('hahahaha')
-    for link2 in links2:
-        print(link2)
-    return links2
-"""
-
-
+# 2
 def func_add(table, category, book, author, pages, status):
-    print('MAM CIE!!!!!!!!!!!!!!!!!!!!!!!')
-    print('MAM CIE!!!!!!!!!!!!!!!!!!!!!!!')
     db = Database('test')
     db.insert(table, category, book, author, pages, status)
 
 
-def func_category(table_name: str):
+# 3
+def func_category(table_name: str, category: str):
     db = Database('test')
-    links2 = db.fetch_cat(table_name)
-    print('WIN_ONLY_WIN')
-    print(links2)
-    print('WIN_ONLY_WIN')
-    for link2 in links2:
-        print(link2)
+    links2 = db.fetch_cat(table_name, category)
     return links2
 
 
-def func_serial(table, column):
-    db = Database('test')
-    db.dupa(table, column)
-
-
+# 4
 def create_table(table_name):
-    print(table_name)
-    db = Database(table_name)
+    db = Database('test')
     db.create_table('''CREATE TABLE IF NOT EXISTS library
                     (id SERIAL PRIMARY KEY,
                     category TEXT, book TEXT, author TEXT,
-                    pages INTEGER, status TEXT, dupa SERIAL)'''
+                    pages INTEGER, status TEXT)'''
                     )
+
+
+# 5
+def func_delete(table_name, id: int):
+    db = Database('test')
+    db.delete(table_name, id)
+
+
+# 6
+def func_column_unique(table, book):
+    db = Database('test')
+    db.change_column_unique(table, book)
+
+
+# 7
+def func_new_column(table, column_name):
+    db = Database('test')
+    db.add_new_column(table, column_name)
+
+
+# 8
+def func_update(table, key: str, value, id):
+    db = Database('test')
+    db.update(table, key, value, id)
+
+
+# 9
+def func_category_distinct(table):
+    db = Database('test')
+    dis_cat = db.category_distinct(table, 'category')
+    return dis_cat
+
+
+# 10
+def func_book_id(table, id):
+    db = Database('test')
+    book_info = db.fetch_id(table, id)
+    return book_info

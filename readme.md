@@ -7,8 +7,8 @@ Library's project based on Flask to create a simple REST API with multiple endpo
 <li>3 containers run on Docker:</li> 
 <ol>
 <li>db - PostgreSQL database - port: 5432</li>
-<li>adminer - reading data from database - port: 5000</li>
-<li>web - Server with API - port: 8080 </li>
+<li>adminer - reading data from database - port: 8080</li>
+<li>web - Flask's server - port: 5000 </li>
 </ol>
 </ul>
 

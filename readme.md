@@ -40,7 +40,7 @@ Library's project based on Flask to create a simple REST API with multiple endpo
     http://localhost:5000/API/<category>
 
 ### 8) Adding a new book:
-    http://localhost:5000/API/add  
+    POST http://localhost:5000/API/add  
 
 #### + request json e.g.:
 {   
